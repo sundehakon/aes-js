@@ -39,6 +39,21 @@ function App() {
     reader.readAsText(file);
   };
 
+  const decryptFile = () => {
+    if (!key) {
+      setError('Key is required');
+      return;
+    }
+
+    if (!encryptedData) {
+      setError('No encrypted data');
+      return;
+    }
+
+    const decrypted = CryptoJS.AES.decrypt(encryptedData, key).toString(CryptoJS.enc.Utf8);
+    setDecryptedData(decrypted);
+  };
+
   return (
 
   );
