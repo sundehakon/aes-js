@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import CryptoJS from "crypto-js";
-import { Button, TextField, Container, Typography, Box, Snackbar } from "@mui/material";
+import CryptoJS from 'crypto-js';
+import { Button, TextField, Container, Typography, Box, Snackbar } from '@mui/material';
 
 function App() {
   const [file, setFile] = useState(null);
@@ -34,27 +34,39 @@ function App() {
     const reader = new FileReader();
     reader.onload = () => {
       const fileContent = reader.result;
-      const encrypted = CryptoJS.AES.encrypt(fileContent, key).toString();
-      setEncryptedData(encrypted);
+      try {
+        const encrypted = CryptoJS.AES.encrypt(fileContent, key).toString();
+        setEncryptedData(encrypted);
+        setDecryptedData(null);
+        downloadEncryptedFile(encrypted);
+      } catch (err) {
+        setError('Error during encryption');
+      }
     };
     reader.readAsText(file);
   };
 
   const decryptFile = () => {
-    if (!key) {
-      setError('Key is required');
-      return;
+    try {
+      const decrypted = CryptoJS.AES.decrypt(encryptedData, key).toString(CryptoJS.enc.Utf8);
+      if (!decrypted) {
+        setError('Decryption failed. Invalid key or corrupted data.');
+        return;
+      }
+      setDecryptedData(decrypted);
+    } catch (err) {
+      setError('Error during decryption.');
     }
-
-    if (!encryptedData) {
-      setError('No encrypted data');
-      return;
-    }
-
-    const decrypted = CryptoJS.AES.decrypt(encryptedData, key).toString(CryptoJS.enc.Utf8);
-    setDecryptedData(decrypted);
   };
 
+  const downloadEncryptedFile = (encryptedData) => {
+    const blob = new Blob([encryptedData], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'encrypted_file.txt';
+    link.click();
+  };
+  
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 2 }}>
@@ -100,14 +112,6 @@ function App() {
             autoHideDuration={3000}
             onClose={() => setError("")}
           />
-        )}
-        {encryptedData && (
-          <Box sx={{ my: 2 }}>
-            <Typography variant="h6">Encrypted Data:</Typography>
-            <Typography variant="body1" sx={{ wordBreak: "break-word" }}>
-              {encryptedData}
-            </Typography>
-          </Box>
         )}
         {decryptedData && (
           <Box sx={{ my: 2 }}>
