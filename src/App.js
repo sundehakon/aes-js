@@ -119,7 +119,7 @@ function App() {
             </Button>
           </Box>
 
-          <Typography variant="h6" sx={{ my: 2 }}>Or decrypt existing encrypted data:</Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>Decrypt:</Typography>
           <TextField
             fullWidth
             label="Paste Encrypted Data"
