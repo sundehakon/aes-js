@@ -3,12 +3,14 @@ import CryptoJS from 'crypto-js';
 import { Button, TextField, Container, Typography, Box, Snackbar } from '@mui/material';
 
 function App() {
+  // Definerer state variabler
   const [file, setFile] = useState(null);
   const [key, setKey] = useState('');
   const [encryptedData, setEncryptedData] = useState(null);
   const [decryptedData, setDecryptedData] = useState(null);
   const [error, setError] = useState('');
 
+  // Funksjon som oppdaterer fil state når fil er valgt
   const handleFileInput = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -16,11 +18,13 @@ function App() {
     }
   };
 
+  // Funksjon som oppdaterer key state når key er skrevet inn
   const handleKeyInput = (event) => {
     setKey(event.target.value);
   };
 
   const encryptFile = () => {
+    // Sjekker om key og fil er valgt
     if (!key) {
       setError('Key is required');
       return;
@@ -31,14 +35,16 @@ function App() {
       return;
     }
 
+    // Leser filen
     const reader = new FileReader();
     reader.onload = () => {
       const fileContent = reader.result;
       try {
+        // Krypterer innholdet av filen med AES fra CryptoJS
         const encrypted = CryptoJS.AES.encrypt(fileContent, key).toString();
-        console.log('Encrypted data:', encrypted);
         setEncryptedData(encrypted);
         setDecryptedData(null);  
+        // Kaller downloadEncryptedFile funksjon for å laste ned kryptert fil
         downloadEncryptedFile(encrypted);
       } catch (err) {
         setError('Error during encryption');
@@ -49,6 +55,7 @@ function App() {
   };
 
   const decryptFile = () => {
+    // Sjekker key og encrypted data
     if (!key) {
       setError('Key is required for decryption');
       return;
