@@ -97,6 +97,7 @@ function App() {
     setEncryptedData(event.target.value); 
   };
 
+  // Funksjon for å laste ned kryptert fil
   const downloadEncryptedFile = (encryptedData) => {
     const blob = new Blob([encryptedData], { type: 'text/plain' });
     const link = document.createElement('a');
@@ -106,6 +107,7 @@ function App() {
   };
   
   return (
+    // UI
     <Container maxWidth="sm">
       <Box sx={{ my: 2 }}>
         <Typography variant="h4">AES Encryption/Decryption</Typography>
