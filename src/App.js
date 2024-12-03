@@ -121,7 +121,7 @@ function App() {
           helperText={keyError}
           sx={{ mb: 2 }}
         />
-          <Typography variant="h6" sx={{ my: 2 }}>Encrypt a file:</Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>Encrypt:</Typography>
           <input
             type="file"
             onChange={handleFileInput}
