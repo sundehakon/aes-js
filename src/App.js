@@ -9,6 +9,7 @@ function App() {
   const [encryptedData, setEncryptedData] = useState(null);
   const [decryptedData, setDecryptedData] = useState(null);
   const [error, setError] = useState('');
+  const [keyError, setKeyError] = useState('');
 
   // Funksjon som oppdaterer fil state når fil er valgt
   const handleFileInput = (event) => {
@@ -20,13 +21,24 @@ function App() {
 
   // Funksjon som oppdaterer key state når key er skrevet inn
   const handleKeyInput = (event) => {
-    setKey(event.target.value);
+    const inputKey = event.target.value;
+    if (inputKey.length < 8) {
+      setKeyError('Key must be at least 8 characters long');
+    } else {
+      setKeyError('');
+    }
+    setKey(inputKey);
   };
 
   const encryptFile = () => {
     // Sjekker om key og fil er valgt
     if (!key) {
       setError('Key is required');
+      return;
+    }
+
+    if (key.length < 8) {
+      setError('Key must be at least 8 characters long');
       return;
     }
 
@@ -98,16 +110,17 @@ function App() {
       <Box sx={{ my: 2 }}>
         <Typography variant="h4">AES Encryption/Decryption</Typography>
         <Box sx={{ my: 2 }}>
-          <TextField
-            fullWidth
-            label="Encryption Key"
-            variant="outlined"
-            value={key}
-            onChange={handleKeyInput}
-            type="password"
-            sx={{ mb: 2 }}
-          />
-          
+        <TextField
+          fullWidth
+          label="Encryption Key"
+          variant="outlined"
+          value={key}
+          onChange={handleKeyInput}
+          type="password"
+          error={!!keyError}
+          helperText={keyError}
+          sx={{ mb: 2 }}
+        />
           <Typography variant="h6" sx={{ my: 2 }}>Encrypt a file:</Typography>
           <input
             type="file"
